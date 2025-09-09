@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор дозы КТ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-theme {
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
+        .dark-theme .container {
+            background: #2d2d2d;
+        }
+        h1 {
+            text-align: center;
+            color: #2196F3;
+        }
+        .theme-toggle {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .dark-theme .theme-toggle {
+            background: #1976D2;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .section {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .dark-theme .section {
+            border-color: #555;
+            background: #3d3d3d;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .radio-btn {
+            position: relative;
+            display: inline-block;
+            padding: 10px 15px;
+            background: #e0e0e0;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        .radio-btn input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        .radio-btn input[type="radio"]:checked + span {
+            background: #2196F3;
+            color: white;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            background: #e8f5e9;
+            text-align: center;
+        }
+        .dark-theme .result {
+            background: #2e7d32;
+            border-color: #4CAF50;
+        }
+        .error {
+            color: #d32f2f;
+        }
+        .warning {
+            color: #FF9800;
+            font-style: italic;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            padding: 10px 20px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .dark-theme button {
+            background: #1976D2;
+        }
+        #help {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .dark-theme #help {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🩺 Калькулятор дозы КТ</h1>
+        <p>Быстрый расчёт эффективной дозы облучения при КТ.</p>
+        
+        <button class="theme-toggle" onclick="toggleTheme()">Переключить на тёмную тему</button>
+        
+        <div class="grid">
+            <div class="section">
+                <label for="dlp">DLP (mGy·cm):</label>
+                <input type="range" id="dlp" min="0" max="2000" value="500" step="1" oninput="calculateED()">
+                <output id="dlpValue">500.00</output>
+            </div>
+            
+            <div class="section">
+                <label>Регион сканирования:</label>
+                <div class="radio-group">
+                    <label class="radio-btn">
+                        <input type="radio" name="region" value="Голова и шея" checked onchange="calculateED()">
+                        <span>Голова и шея</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="region" value="Голова" onchange="calculateED()">
+                        <span>Голова</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="region" value="Шея" onchange="calculateED()">
+                        <span>Шея</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="region" value="Грудь" onchange="calculateED()">
+                        <span>Грудь</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="region" value="Живот и таз" onchange="calculateED()">
+                        <span>Живот и таз</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="region" value="Туловище" onchange="calculateED()">
+                        <span>Туловище</span>
+                    </label>
+                </div>
+                <div id="help">
+                    <strong>Помощь:</strong> <br>
+                    - Голова: КТ мозга, пазух (до подбородка). <br>
+                    - Шея: КТ щитовидной железы (от подбородка до ключиц). <br>
+                    - Голова и шея: От верхушки черепа до ключиц. <br>
+                    - Грудь: КТ лёгких, сердца. <br>
+                    - Живот и таз: Органы брюшной полости. <br>
+                    - Туловище: Среднее для туловища.
+                </div>
+            </div>
+            
+            <div class="section">
+                <label>Возрастная категория:</label>
+                <div class="radio-group">
+                    <label class="radio-btn">
+                        <input type="radio" name="age" value="0" onchange="calculateED()">
+                        <span>Новорождённые (0 лет)</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="age" value="1" onchange="calculateED()">
+                        <span>Дети до 1 года</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="age" value="5" onchange="calculateED()">
+                        <span>Дети 1–5 лет</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="age" value="10" onchange="calculateED()">
+                        <span>Дети 5–10 лет</span>
+                    </label>
+                    <label class="radio-btn">
+                        <input type="radio" name="age" value="adult" checked onchange="calculateED()">
+                        <span>Взрослые (>10 лет)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <div id="result" class="result"></div>
+        <p class="warning">Это оценочный расчёт. Для точности обратитесь к специалисту.</p>
+        
+        <div class="buttons">
+            <button onclick="copyResult()">Копировать результат</button>
+            <button onclick="exportCSV()">Экспорт в CSV</button>
+        </div>
+    </div>
+
+    <script>
+        // Коэффициенты (аналог Python-словаря)
+        const COEFFICIENTS = {
+            'Голова и шея': { '0': 0.013, '1': 0.0085, '5': 0.0057, '10': 0.0042, 'adult': 0.0031 },
+            'Голова': { '0': 0.011, '1': 0.0067, '5': 0.0040, '10': 0.0032, 'adult': 0.0021 },
+            'Шея': { '0': 0.017, '1': 0.012, '5': 0.011, '10': 0.0079, 'adult': 0.0059 },
+            'Грудь': { '0': 0.039, '1': 0.026, '5': 0.018, '10': 0.013, 'adult': 0.014 },
+            'Живот и таз': { '0': 0.049, '1': 0.030, '5': 0.020, '10': 0.015, 'adult': 0.015 },
+            'Туловище': { '0': 0.044, '1': 0.028, '5': 0.019, '10': 0.014, 'adult': 0.015 }
+        };
+
+        function calculateED() {
+            const dlp = parseFloat(document.getElementById('dlp').value);
+            const region = document.querySelector('input[name="region"]:checked').value;
+            const age = document.querySelector('input[name="age"]:checked').value;
+            
+            if (dlp <= 0 || !region || !age) {
+                document.getElementById('result').innerHTML = '<p class="error">Введите все данные.</p>';
+                return;
+            }
+            
+            const k = COEFFICIENTS[region][age];
+            const ed = dlp * k;
+            document.getElementById('result').innerHTML = `<p>Эффективная доза: ${ed.toFixed(2)} mSv<br>(Формула: ${dlp} × ${k} mSv/mGy·cm)</p>`;
+            document.getElementById('dlpValue').textContent = dlp.toFixed(2);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = document.body.classList.contains('dark-theme') ? 'Переключить на светлую тему' : 'Переключить на тёмную тему';
+        }
+
+        function copyResult() {
+            const result = document.getElementById('result').textContent;
+            if (result && !result.includes('Введите')) {
+                navigator.clipboard.writeText(result).then(() => alert('Результат скопирован!'));
+            } else {
+                alert('Нет результата для копирования.');
+            }
+        }
+
+        function exportCSV() {
+            const dlp = document.getElementById('dlp').value;
+            const region = document.querySelector('input[name="region"]:checked').value;
+            const ageLabel = document.querySelector('input[name="age"]:checked').nextElementSibling.textContent;
+            const ed = document.getElementById('result').textContent.match(/(\d+\.\d+) mSv/)?.[1] || '';
+            const date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            
+            const csvContent = `Дата,DLP,Регион,Возраст,Эффективная доза (mSv)\n${date},${dlp},${region},${ageLabel},${ed}`;
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ct_dose_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+        }
+
+        // Инициализация
+        document.getElementById('dlp').oninput = function() {
+            document.getElementById('dlpValue').textContent = this.value;
+            calculateED();
+        };
+        calculateED();  // Начальный расчёт
+    </script>
+</body>
+</html>
