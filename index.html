@@ -33,18 +33,60 @@
             text-align: center;
             color: #2196F3;
         }
-        .theme-toggle {
-            display: block;
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin: 0 auto 20px;
-            padding: 10px 20px;
-            background: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
         }
-        .dark-theme .theme-toggle {
-            background: #1976D2;
+        .theme-switch input {
+            display: none;
+        }
+        .theme-switch label {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            background-color: #ccc;
+            border-radius: 34px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .dark-theme .theme-switch label {
+            background-color: #555;
+        }
+        .theme-switch label::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: white;
+            top: 4px;
+            left: 4px;
+            transition: transform 0.3s;
+        }
+        .theme-switch input:checked + label::after {
+            transform: translateX(26px);
+        }
+        .theme-switch input:checked + label {
+            background-color: #2196F3;
+        }
+        .theme-switch svg {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            transition: opacity 0.3s;
+        }
+        .theme-switch .sun {
+            left: 7px;
+            opacity: 1;
+        }
+        .theme-switch .moon {
+            right: 7px;
+            opacity: 1;
         }
         .grid {
             display: grid;
@@ -82,7 +124,8 @@
         }
         .radio-btn {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 10px 15px;
             background: #e0e0e0;
             border: 2px solid #2196F3;
@@ -95,9 +138,10 @@
             position: absolute;
             opacity: 0;
         }
-        .radio-btn input[type="radio"]:checked + span {
-            background: #2196F3;
-            color: white;
+        .radio-btn input[type="radio"]:checked + * {
+            background: #2196F3; /* Окрашиваем всю кнопку */
+            color: white; /* Текст белый */
+            border-color: #2196F3; /* Синхронизируем бордер */
         }
         .result {
             margin-top: 20px;
@@ -149,7 +193,25 @@
         <h1>🩺 Калькулятор дозы КТ</h1>
         <p>Быстрый расчёт эффективной дозы облучения при КТ.</p>
         
-        <button class="theme-toggle" onclick="toggleTheme()">Переключить на тёмную тему</button>
+        <div class="theme-switch">
+            <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+            <label for="theme-toggle">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </label>
+        </div>
         
         <div class="grid">
             <div class="section">
@@ -234,7 +296,7 @@
     </div>
 
     <script>
-        // Коэффициенты (аналог Python-словаря)
+        // Коэффициенты
         const COEFFICIENTS = {
             'Голова и шея': { '0': 0.013, '1': 0.0085, '5': 0.0057, '10': 0.0042, 'adult': 0.0031 },
             'Голова': { '0': 0.011, '1': 0.0067, '5': 0.0040, '10': 0.0032, 'adult': 0.0021 },
@@ -246,24 +308,33 @@
 
         function calculateED() {
             const dlp = parseFloat(document.getElementById('dlp').value);
-            const region = document.querySelector('input[name="region"]:checked').value;
-            const age = document.querySelector('input[name="age"]:checked').value;
+            const region = document.querySelector('input[name="region"]:checked');
+            const age = document.querySelector('input[name="age"]:checked');
             
             if (dlp <= 0 || !region || !age) {
                 document.getElementById('result').innerHTML = '<p class="error">Введите все данные.</p>';
                 return;
             }
             
-            const k = COEFFICIENTS[region][age];
+            const k = COEFFICIENTS[region.value][age.value];
             const ed = dlp * k;
             document.getElementById('result').innerHTML = `<p>Эффективная доза: ${ed.toFixed(2)} mSv<br>(Формула: ${dlp} × ${k} mSv/mGy·cm)</p>`;
             document.getElementById('dlpValue').textContent = dlp.toFixed(2);
+
+            // Сброс всех кнопок
+            document.querySelectorAll('.radio-btn').forEach(btn => {
+                btn.style.background = '#e0e0e0'; // Возвращаем исходный фон
+                btn.style.color = '#333'; // Возвращаем исходный цвет текста
+            });
+            // Окрашиваем выбранные кнопки
+            region.parentElement.style.background = '#2196F3';
+            region.parentElement.style.color = 'white';
+            age.parentElement.style.background = '#2196F3';
+            age.parentElement.style.color = 'white';
         }
 
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
-            const button = document.querySelector('.theme-toggle');
-            button.textContent = document.body.classList.contains('dark-theme') ? 'Переключить на светлую тему' : 'Переключить на тёмную тему';
         }
 
         function copyResult() {
