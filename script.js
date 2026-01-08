@@ -7,9 +7,10 @@
             'Живот и таз': { '0': 0.049, '1': 0.030, '5': 0.020, '10': 0.015, 'adult': 0.015 },
             'Туловище': { '0': 0.044, '1': 0.028, '5': 0.019, '10': 0.014, 'adult': 0.015 }
         };
+        let numberOnDisplay = '', dlp = document.getElementById('dlp').textContent;
 
         function calculateED() {
-            const dlp = parseFloat(document.getElementById('dlp').value);
+            console.log(dlp);
             const region = document.querySelector('input[name="region"]:checked');
             const age = document.querySelector('input[name="age"]:checked');
             
@@ -21,7 +22,6 @@
             const k = COEFFICIENTS[region.value][age.value];
             const ed = dlp * k;
             document.getElementById('result').innerHTML = `<p>Эффективная доза: ${ed.toFixed(2)} mSv<br>(Формула: ${dlp} × ${k} mSv/mGy·cm)</p>`;
-            document.getElementById('dlpValue').textContent = dlp.toFixed(2);
 
             // Сброс всех кнопок
             document.querySelectorAll('.radio-btn').forEach(btn => {
@@ -39,6 +39,9 @@
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
         }
+
+
+
 
         function copyResult() {
             const result = document.getElementById('result').textContent;
