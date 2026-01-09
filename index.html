@@ -58,27 +58,27 @@
                 <label>Регион сканирования:</label>
                 <div class="radio-group">
                     <label class="radio-btn">
-                        <input type="radio" name="region" value="Голова и шея" checked>
+                        <input type="radio" name="region" value="Голова и шея" checked onchange="calculateED()">
                         <span>Голова и шея</span>
                     </label>
                     <label class="radio-btn">
-                        <input type="radio" name="region" value="Голова">
+                        <input type="radio" name="region" value="Голова" onchange="calculateED()">
                         <span>Голова</span>
                     </label>
                     <label class="radio-btn">
-                        <input type="radio" name="region" value="Шея">
+                        <input type="radio" name="region" value="Шея" onchange="calculateED()">
                         <span>Шея</span>
                     </label>
                     <label class="radio-btn">
-                        <input type="radio" name="region" value="Грудь">
+                        <input type="radio" name="region" value="Грудь" onchange="calculateED()">
                         <span>Грудь</span>
                     </label>
                     <label class="radio-btn">
-                        <input type="radio" name="region" value="Живот и таз">
+                        <input type="radio" name="region" value="Живот и таз" onchange="calculateED()">
                         <span>Живот и таз</span>
                     </label>
                     <label class="radio-btn">
-                        <input type="radio" name="region" value="Туловище">
+                        <input type="radio" name="region" value="Туловище" onchange="calculateED()">
                         <span>Туловище</span>
                     </label>
                 </div>
@@ -123,11 +123,6 @@
         
         <div id="result" class="result"></div>
         <p class="warning">Это оценочный расчёт. Для точности обратитесь к специалисту.</p>
-        
-        <div class="buttons">
-            <button onclick="copyResult()">Копировать результат</button>
-            <button onclick="exportCSV()">Экспорт в CSV</button>
-        </div>
     </div>
 
     <script src="script2.js">
