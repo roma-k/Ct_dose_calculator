@@ -95,7 +95,7 @@ function calculateED(dlp) {
             ?.value
     );
 
-    // Сброс всех кнопок 
+    // Сброс всех кнопок
     document
         .querySelectorAll('.radio-btn')
         .forEach(btn => {
@@ -136,9 +136,101 @@ function toggleTheme() {
 
 THEME_TOGGLER.addEventListener('change', toggleTheme);
 
-// Инициализация ============================================
+// popup=============================================================================
+class PopupManager {
+    constructor(helpBtnId, popupId) {
+        this.helpBtn = document.getElementById('help-btn');
+        this.popup = document.getElementById('popup-bg');
+        this.content = this
+            .popup
+            .querySelector('.popup-content'); // Блок с текстом
+        this.isOpen = false;
+
+        if (!this.helpBtn || !this.popup || !this.content) {
+            console.error('Элементы попапа не найдены');
+            return;
+        }
+
+        this.init();
+    }
+
+    init() {
+        // Открытие
+        this
+            .helpBtn
+            .addEventListener('click', (e) => {
+                e.stopPropagation(); // Предотвращаем bubble на body
+                this.open();
+            });
+
+        // Закрытие по фону или Escape (один слушатель)
+        this
+            .popup
+            .addEventListener('click', (e) => {
+                if (e.target === this.popup) 
+                    this.close();
+                }
+            );
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) 
+                this.close();
+            }
+        );
+
+        // Трап фокуса внутри попапа для доступности
+        this
+            .popup
+            .addEventListener('keydown', (e) => this.trapFocus(e));
+    }
+
+    open() {
+        this
+            .popup
+            .classList
+            .remove('hidden');
+        this.isOpen = true;
+        this
+            .content
+            .focus(); // Фокус на контент для клавиатуры
+        document.body.style.overflow = 'hidden'; // Блок скролла
+    }
+
+    close() {
+        this
+            .popup
+            .classList
+            .add('hidden');
+        this.isOpen = false;
+        document.body.style.overflow = '';
+        this
+            .helpBtn
+            .focus(); // Возврат фокуса
+    }
+
+    trapFocus(e) {
+        if (e.key === 'Tab') {
+            // Логика удержания фокуса внутри попапа (упрощённо)
+            const focusable = this
+                .popup
+                .querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+            if (focusable.length) {
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) 
+                    last.focus();
+                else if (!e.shiftKey && document.activeElement === last) 
+                    first.focus();
+                }
+            }
+    }
+}
+// ===========================================================================
+// ======== Инициализация ============================================
 document.addEventListener('DOMContentLoaded', function () {
     keyBoard();
     calculateED();
+    new PopupManager('help-btn', 'popup-bg');
 });
-

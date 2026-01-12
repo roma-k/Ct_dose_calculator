@@ -7,122 +7,124 @@
     <title>Калькулятор дозы КТ</title>
 </head>
 <body class="body">
-    <div class="container">
-        <h1 class="h1">🩺 Калькулятор дозы КТ</h1>
-        
-        <!-- <div class="grid">
-            <div class="section">
-                <label for="dlp">DLP (mGy·cm):</label>
-                <input type="range" id="dlp" min="0" max="2000" value="500" step="1" oninput="calculateED()">
-                <output id="dlpValue">500.00</output>
-            </div> -->
-            <div class="section">
-                <div class="theme-switch">
-                    <input type="checkbox" id="theme-toggle">
-                    <label for="theme-toggle" id="label-theme-toggler" >
-                        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                    </label>
-                </div>
-
-                <div class="display-dlp"><p class="dlp" id="display">0</p></div>
-                <div class="keyboard" id="keyboard">
-                    <button class="keyboard-btn" value="1">1</button>
-                    <button class="keyboard-btn" value="2">2</button>
-                    <button class="keyboard-btn" value="3">3</button>
-                    <button class="keyboard-btn" value="4">4</button>
-                    <button class="keyboard-btn" value="5">5</button>
-                    <button class="keyboard-btn" value="6">6</button>
-                    <button class="keyboard-btn" value="7">7</button>
-                    <button class="keyboard-btn" value="8">8</button>
-                    <button class="keyboard-btn" value="9">9</button>
-                    <button class="keyboard-btn" value="C">C</button>
-                    <button class="keyboard-btn" value="0">0</button>
-                    <button class="keyboard-btn" value="B"><-</button>
-                </div>
-            </div>
-            
-            <div class="section">
-                <label>Регион сканирования:</label>
-                <div class="radio-group">
-                    <label class="radio-btn">
-                        <input type="radio" name="region" value="Голова и шея" checked onchange="calculateED()">
-                        <span>Голова и шея</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="region" value="Голова" onchange="calculateED()">
-                        <span>Голова</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="region" value="Шея" onchange="calculateED()">
-                        <span>Шея</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="region" value="Грудь" onchange="calculateED()">
-                        <span>Грудь</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="region" value="Живот и таз" onchange="calculateED()">
-                        <span>Живот и таз</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="region" value="Туловище" onchange="calculateED()">
-                        <span>Туловище</span>
-                    </label>
-                </div>
-<!-- Сделать попап!-->
-                <!-- <div id="help">
-                    <strong>Помощь:</strong> <br>
-                    - Голова: КТ мозга, пазух (до подбородка). <br>
-                    - Шея: КТ щитовидной железы (от подбородка до ключиц). <br>
-                    - Голова и шея: От верхушки черепа до ключиц. <br>
-                    - Грудь: КТ лёгких, сердца. <br>
-                    - Живот и таз: Органы брюшной полости. <br>
-                    - Туловище: Среднее для туловища.
-                </div> -->
-            </div>
-            
-            <div class="section">
-                <label>Возрастная категория:</label>
-                <div class="radio-group">
-                    <label class="radio-btn">
-                        <input type="radio" name="age" value="0" onchange="calculateED()">
-                        <span>Новорождённые (0 лет)</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="age" value="1" onchange="calculateED()">
-                        <span>Дети до 1 года</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="age" value="5" onchange="calculateED()">
-                        <span>Дети 1–5 лет</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="age" value="10" onchange="calculateED()">
-                        <span>Дети 5–10 лет</span>
-                    </label>
-                    <label class="radio-btn">
-                        <input type="radio" name="age" value="adult" checked onchange="calculateED()">
-                        <span>Взрослые (>10 лет)</span>
-                    </label>
-                </div>
+    <div class="popup-bg hidden" id="popup-bg">
+        <div class="window-wrp">
+            <div class="popup-content" id="help">
+                <strong>Помощь:</strong> <br>
+                - Голова: КТ мозга, пазух (до подбородка). <br>
+                - Шея: КТ щитовидной железы (от подбородка до ключиц). <br>
+                - Голова и шея: От верхушки черепа до ключиц. <br>
+                - Грудь: КТ лёгких, сердца. <br>
+                - Живот и таз: Органы брюшной полости. <br>
+                - Туловище: Среднее для туловища.
             </div>
         </div>
-        
-        <div id="result" class="result"></div>
-        <p class="warning">Это оценочный расчёт. Для точности обратитесь к специалисту.</p>
+    </div>
+    <div class="body-wrapper">
+        <div class="container">
+            <h1 class="h1">🩺 Калькулятор дозы КТ</h1>
+                <div class="section">
+                    <div class="theme-switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <label for="theme-toggle" id="label-theme-toggler" >
+                            <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                            <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </label>
+                    </div>
+    
+                    <div class="display-dlp"><p class="dlp" id="display">0</p></div>
+                    <div class="keyboard" id="keyboard">
+                        <button class="keyboard-btn" value="1">1</button>
+                        <button class="keyboard-btn" value="2">2</button>
+                        <button class="keyboard-btn" value="3">3</button>
+                        <button class="keyboard-btn" value="4">4</button>
+                        <button class="keyboard-btn" value="5">5</button>
+                        <button class="keyboard-btn" value="6">6</button>
+                        <button class="keyboard-btn" value="7">7</button>
+                        <button class="keyboard-btn" value="8">8</button>
+                        <button class="keyboard-btn" value="9">9</button>
+                        <button class="keyboard-btn" value="C">C</button>
+                        <button class="keyboard-btn" value="0">0</button>
+                        <button class="keyboard-btn" value="B"><-</button>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <button class="help-btn buttons" id="help-btn">?</button>
+                    <label class="h2">Регион сканирования:</label>
+                    <div class="radio-group">
+                        <label class="radio-btn">
+                            <input type="radio" name="region" value="Голова и шея" checked onchange="calculateED()">
+                            <span>Голова и шея</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="region" value="Голова" onchange="calculateED()">
+                            <span>Голова</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="region" value="Шея" onchange="calculateED()">
+                            <span>Шея</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="region" value="Грудь" onchange="calculateED()">
+                            <span>Грудь</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="region" value="Живот и таз" onchange="calculateED()">
+                            <span>Живот и таз</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="region" value="Туловище" onchange="calculateED()">
+                            <span>Туловище</span>
+                        </label>
+                    </div>
+    <!-- Сделать попап!-->
+                    
+                    
+                </div>
+                
+                <div class="section">
+                    <label class="h2">Возрастная категория:</label>
+                    <div class="radio-group">
+                        <label class="radio-btn">
+                            <input type="radio" name="age" value="0" onchange="calculateED()">
+                            <span>Новорождённые (0 лет)</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="age" value="1" onchange="calculateED()">
+                            <span>Дети до 1 года</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="age" value="5" onchange="calculateED()">
+                            <span>Дети 1–5 лет</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="age" value="10" onchange="calculateED()">
+                            <span>Дети 5–10 лет</span>
+                        </label>
+                        <label class="radio-btn">
+                            <input type="radio" name="age" value="adult" checked onchange="calculateED()">
+                            <span>Взрослые (>10 лет)</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="result" class="result"></div>
+            <p class="warning">Это оценочный расчёт. Для точности обратитесь к специалисту.</p>
+        </div>
     </div>
 
     <script src="script.js">
