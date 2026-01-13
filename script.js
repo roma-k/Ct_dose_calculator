@@ -125,16 +125,16 @@ function calculateED(dlp) {
 
 // Переключатель тем ============================================
 const THEME_TOGGLER = document.getElementById('theme-toggle');
+console.log(document.getElementsByClassName('body-wrapper'))
 
 function toggleTheme() {
     document
         .body
         .classList
         .toggle('dark-theme');
-    console.log('RERE ~<NF')
+    console.log(document.getElementsByClassName('body-wrapper'))
 }
 
-THEME_TOGGLER.addEventListener('change', toggleTheme);
 
 // popup=============================================================================
 class PopupManager {
@@ -142,10 +142,10 @@ class PopupManager {
         this.helpBtn = document.getElementById('help-btn');
         this.popup = document.getElementById('popup-bg');
         this.content = this
-            .popup
-            .querySelector('.popup-content'); // Блок с текстом
+        .popup
+        .querySelector('.popup-content'); // Блок с текстом
         this.isOpen = false;
-
+        
         if (!this.helpBtn || !this.popup || !this.content) {
             console.error('Элементы попапа не найдены');
             return;
@@ -233,4 +233,5 @@ document.addEventListener('DOMContentLoaded', function () {
     keyBoard();
     calculateED();
     new PopupManager('help-btn', 'popup-bg');
+    THEME_TOGGLER.addEventListener('change', toggleTheme);
 });
