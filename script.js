@@ -56,18 +56,19 @@ function keyBoard() {
                 let delLast = DISPLAY
                     .textContent
                     .slice(0, -1)
-                DISPLAY.textContent = delLast
+                DISPLAY.textContent = delLast || '0';
                 calculateED(DISPLAY.textContent);
             } else {
                 switch (DISPLAY.textContent) {
                     case '0':
                         DISPLAY.textContent = ''
-                        calculateED(0);
+                        // calculateED(0);
+                        break;
                     default:
-                        DISPLAY.textContent = DISPLAY.textContent + button.value;
-                        console.log(DISPLAY.textContent + ` Нажата кнопка ${button.value}`)
-                        calculateED(DISPLAY.textContent);
-                }
+                    }
+                DISPLAY.textContent = DISPLAY.textContent + button.value;
+                console.log(DISPLAY.textContent + ` Нажата кнопка ${button.value}`)
+                calculateED(DISPLAY.textContent);
             }
         })
     }
@@ -94,7 +95,13 @@ function calculateED(dlp) {
         age
             ?.value
     );
-
+// Проверка на пустоту параметров возраст, регион
+    if (dlp <= 0 || !region || !age) {
+        document
+            .getElementById('result')
+            .innerHTML = '<p class="error">Введите все данные.</p>';
+        return;
+    }
     // Сброс всех кнопок
     document
         .querySelectorAll('.radio-btn')
@@ -109,12 +116,6 @@ function calculateED(dlp) {
     age.parentElement.style.color = 'white';
     console.log('куку')
     // Проверяем DLP и переходим к рассчёту
-    if (dlp <= 0 || !region || !age) {
-        document
-            .getElementById('result')
-            .innerHTML = '<p class="error">Введите все данные.</p>';
-        return;
-    }
 
     const k = COEFFICIENTS[region.value][age.value];
     const ed = dlp * k;
