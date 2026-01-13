@@ -43,7 +43,8 @@ const COEFFICIENTS = {
         }
     },
     BUTTONS = document.getElementsByClassName('keyboard-btn'),
-    DISPLAY = document.getElementById('display');
+    DISPLAY = document.getElementById('display'),
+    DISPLAY_BG = document.getElementById('display-bg');
 
 // КлаваДисплей ============================================
 function keyBoard() {
@@ -65,7 +66,7 @@ function keyBoard() {
                         // calculateED(0);
                         break;
                     default:
-                    }
+                }
                 DISPLAY.textContent = DISPLAY.textContent + button.value;
                 console.log(DISPLAY.textContent + ` Нажата кнопка ${button.value}`)
                 calculateED(DISPLAY.textContent);
@@ -95,11 +96,11 @@ function calculateED(dlp) {
         age
             ?.value
     );
-// Проверка на пустоту параметров возраст, регион
-    if (dlp <= 0 || !region || !age) {
+    // Проверка на пустоту параметров возраст, регион
+    if (!region || !age) {
         document
             .getElementById('result')
-            .innerHTML = '<p class="error">Введите все данные.</p>';
+            .innerHTML = '\n\nВыберите регион и возраст.';
         return;
     }
     // Сброс всех кнопок
@@ -115,8 +116,14 @@ function calculateED(dlp) {
     age.parentElement.style.background = '#2196F3';
     age.parentElement.style.color = 'white';
     console.log('куку')
-    // Проверяем DLP и переходим к рассчёту
 
+    // Проверяем DLP и переходим к рассчёту
+    if (dlp <= 0) {
+        document
+            .getElementById('result')
+            .innerHTML = '\n\nВведите DLP (больше 0).';
+        return;
+    }
     const k = COEFFICIENTS[region.value][age.value];
     const ed = dlp * k;
     document
@@ -133,9 +140,10 @@ function toggleTheme() {
         .body
         .classList
         .toggle('dark-theme');
+    DISPLAY_BG.classList.toggle('dark-theme');
     console.log(document.getElementsByClassName('body-wrapper'))
-}
 
+}
 
 // popup=============================================================================
 class PopupManager {
@@ -143,10 +151,10 @@ class PopupManager {
         this.helpBtn = document.getElementById('help-btn');
         this.popup = document.getElementById('popup-bg');
         this.content = this
-        .popup
-        .querySelector('.popup-content'); // Блок с текстом
+            .popup
+            .querySelector('.popup-content'); // Блок с текстом
         this.isOpen = false;
-        
+
         if (!this.helpBtn || !this.popup || !this.content) {
             console.error('Элементы попапа не найдены');
             return;
